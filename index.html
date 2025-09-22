@@ -5,7 +5,7 @@
   </head>
   <body>
     <div id="reader" width="600px"></div> 
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" type="text/javascript">
       
       
@@ -20,7 +20,8 @@
             // for example:
             console.warn(`Code scan error = ${error}`);
         }
-        
+
+      $(document).ready(function(){
         let html5QrcodeScanner = new Html5QrcodeScanner(
             "reader", {
                 fps: 10,
@@ -32,6 +33,10 @@
             /* verbose= */
             false);
         html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        
+      });
+        
+
         
       </script>
   </body>
