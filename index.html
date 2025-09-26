@@ -123,8 +123,24 @@
 
         let codeArray = new Array(); 
         let lastCode;
+
+        async function getWideAngleCamera() {
+          const devices = await navigator.mediaDevices.enumerateDevices();
+          const backCameras = devices.filter(device => device.kind === "videoinput" && device.label.toLowerCase().includes("back"));
+          
+          //pick the camera that has 'wide' in the label
+          const wideCamera = backCameras.find(device => device.label.toLowerCase().includes("wide")) || backCameras[0];
         
-        function drawLine(begin, end, color) {
+          if (!wideCamera) {
+            console.error("No suitable wide-angle camera found.");
+            return null;
+          }
+        
+          return wideCamera.deviceId;
+        }
+
+        
+        async function drawLine(begin, end, color) {
           canvas.beginPath();
           canvas.moveTo(begin.x, begin.y);
           canvas.lineTo(end.x, end.y);
@@ -133,8 +149,14 @@
           canvas.stroke();
         }
         // Use facingMode: environment to attemt to get the front camera on phones
+        const deviceId = await getWideAngleCamera();
+
+        if (!deviceId) return;
+        
         navigator.mediaDevices.getUserMedia({
           video: {
+            deviceId: { exact: deviceId },
+            advanced: [{ zoom: 1.0 }],
             facingMode: "environment"
           }
         }).then(function(stream) {
@@ -176,6 +198,8 @@ try{
     } else {
        audioFail.play();
     }
+  } else {
+     audioFail.play();
   }
 } catch (e){
   console.log(e.message);
