@@ -128,7 +128,7 @@
         
         async function getWideAngleCamera() {
           devices = await navigator.mediaDevices.enumerateDevices();
-          console.log(devices);
+          console.log(JSON.stringify(devices));
           const backCameras = devices.filter(device => device.kind === "videoinput" && device.label.toLowerCase().includes("back"));
         
           //pick the camera that has 'wide' in the label
@@ -193,7 +193,7 @@
               outputData.innerText = code.data;
 try{
   if(!delay){
-    console.log(devices);
+    console.log(JSON.stringify(devices));
     
     if(codeArray.indexOf(code.data) == -1){
       codeArray.push(code.data);
