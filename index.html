@@ -125,37 +125,44 @@
         let lastCode;
         let delay = null;  
         let devices;  
-        
-        async function getWideAngleCamera() {
-          devices = await navigator.mediaDevices.enumerateDevices();
-          console.log(JSON.stringify(devices));
-          const backCameras = devices.filter(device => device.kind === "videoinput" && device.label.toLowerCase().includes("back"));
-        
-          //pick the camera that has 'wide' in the label
-          const wideCamera = backCameras.find(device => device.label.toLowerCase().includes("wide")) || backCameras[0];
-          console.log(backCameras);
-        
-          if (!wideCamera) {
-            console.error("No suitable wide-angle camera found.");
-            return null;
-          }
-          return wideCamera.deviceId;
+
+        async function requestMediaAccess() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                // You can stop the stream immediately if you only need device info
+                stream.getTracks().forEach(track => track.stop());
+            } catch (error) {
+                console.error('Error accessing media devices:', error);
+            }
         }
 
-       // let deviceId = await getWideAngleCamera();
+          async function getCameraDeviceIds() {
+              await requestMediaAccess(); // Ensure permissions are granted
+      
+              try {
+                  const devices = await navigator.mediaDevices.enumerateDevices();
+                  const cameraDevices = devices.filter(device => device.kind === 'videoinput');
+      
+                  cameraDevices.forEach(camera => {
+                      console.log(`Camera Label: ${camera.label}, Device ID: ${camera.deviceId}`);
+                  });
+      
+                  return cameraDevices.map(camera => camera.deviceId);
+              } catch (error) {
+                  console.error('Error enumerating devices:', error);
+                  return [];
+              }
+          }
 
-        navigator.mediaDevices.enumerateDevices()
-        .then((devices) => {
-          devices.forEach((device) => {
-            console.log(device); // This will be an InputDeviceInfo object if it's an input device
-            if (device.kind === 'audioinput' || device.kind === 'videoinput') {
-              console.log(`Input device found: ${device.label || 'Unnamed Device'} (ID: ${device.deviceId})`);
-            }
-          });
-        })
-        .catch((err) => {
-          console.error(`Error enumerating devices: ${err}`);
-        });
+        getCameraDeviceIds().then(deviceIds => {
+              if (deviceIds.length > 0) {
+                  console.log('Available camera device IDs:', deviceIds);
+                  // You can now use these device IDs to select a specific camera
+                  // when calling getUserMedia, e.g., { video: { deviceId: { exact: deviceIds[0] } } }
+              } else {
+                  console.log('No camera devices found.');
+              }
+          });  
 
         
         async function drawLine(begin, end, color) {
