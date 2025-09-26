@@ -127,7 +127,7 @@
         async function getWideAngleCamera() {
           const devices = await navigator.mediaDevices.enumerateDevices();
           const backCameras = devices.filter(device => device.kind === "videoinput" && device.label.toLowerCase().includes("back"));
-          
+        
           //pick the camera that has 'wide' in the label
           const wideCamera = backCameras.find(device => device.label.toLowerCase().includes("wide")) || backCameras[0];
         
@@ -149,14 +149,12 @@
         }
 
         
-        const deviceId = await getWideAngleCamera();
-        if (!deviceId) return alert('getWideAngleCamera not found');
+       // const deviceId = await getWideAngleCamera();
+      //  if (!deviceId) return console.error('getWideAngleCamera not found');
         
         // Use facingMode: environment to attemt to get the front camera on phones
         navigator.mediaDevices.getUserMedia({
-          video: {
-            deviceId: { exact: deviceId },
-            advanced: [{ zoom: 1.0 }],
+          video: { 
             facingMode: "environment"
           }
         }).then(function(stream) {
