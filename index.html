@@ -126,10 +126,12 @@
 
         async function getWideAngleCamera() {
           const devices = await navigator.mediaDevices.enumerateDevices();
+          console.log(devices);
           const backCameras = devices.filter(device => device.kind === "videoinput" && device.label.toLowerCase().includes("back"));
         
           //pick the camera that has 'wide' in the label
           const wideCamera = backCameras.find(device => device.label.toLowerCase().includes("wide")) || backCameras[0];
+          console.log(backCameras);
         
           if (!wideCamera) {
             console.error("No suitable wide-angle camera found.");
@@ -138,6 +140,7 @@
           return wideCamera.deviceId;
         }
 
+        let deviceId = await getWideAngleCamera();
         
         async function drawLine(begin, end, color) {
           canvas.beginPath();
@@ -154,6 +157,7 @@
         
         // Use facingMode: environment to attemt to get the front camera on phones
         navigator.mediaDevices.getUserMedia({
+          audio: false,
           video: { 
             facingMode: "environment"
           }
@@ -175,7 +179,7 @@
             canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
             var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
             var code = jsQR(imageData.data, imageData.width, imageData.height, {
-              inversionAttempts: "dontInvert",
+              inversionAttempts: "dontInvert", 
             });
             if (code) {
               drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
@@ -193,7 +197,7 @@ try{
       codeArray.push(code.data);
       console.log(codeArray);
       audioTrue.play();
-       await new Promise(resolve => setTimeout(resolve, 1000))
+       //await new Promise(resolve => setTimeout(resolve, 1000))
     } else {
        audioFail.play();
     }
