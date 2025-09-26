@@ -182,7 +182,12 @@
         audio: false,
         video: wideCamera ? {
             deviceId: {
-                exact: wideCamera.deviceId
+                exact: wideCamera.deviceId,
+                frameRate: {
+                  ideal: 30, // Desired ideal frame rate
+                  max: 60    // Maximum acceptable frame rate
+                }
+
             }
         } : {
             facingMode: "environment"
