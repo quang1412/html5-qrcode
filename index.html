@@ -124,6 +124,7 @@
     let lastCode;
     let delay = null;
     let deviceId;
+    let wideCamera; 
 
     async function requestMediaAccess() {
         try {
@@ -144,8 +145,9 @@
             const devices = await navigator.mediaDevices.enumerateDevices();
             const cameraDevices = devices.filter(device => device.kind === 'videoinput');
             cameraDevices.forEach(camera => {
-                if (camera.label == ('Camera cực rộng mặt sau')) {
-                    deviceId = camera.deviceId;
+                if (camera.label.includes('cực rộng mặt sau')) {
+                  wideCamera = camera; 
+                  console.log('wideCamera found! ', camera.deviceId)
                 }
                 console.log(`Camera Label: ${camera.label}, Device ID: ${camera.deviceId}`);
             });
@@ -178,9 +180,9 @@
     // Use facingMode: environment to attemt to get the front camera on phones
     navigator.mediaDevices.getUserMedia({
         audio: false,
-        video: deviceId ? {
+        video: wideCamera ? {
             deviceId: {
-                exact: deviceId
+                exact: wideCamera.deviceId
             }
         } : {
             facingMode: "environment"
@@ -219,14 +221,11 @@
                         if (codeArray.indexOf(code.data) == -1) {
                             codeArray.push(code.data);
                             console.log(codeArray);
-                            audioTrue.play();
-                            //await new Promise(resolve => setTimeout(resolve, 1000))
+                            audioTrue.play(); 
                         } else {
                             audioFail.play();
                         }
-                        delay = setTimeout(_ => {
-                            delay = null
-                        }, 1000);
+                        delay = setTimeout(_ => { delay = null }, 1000);
                     }
                 } catch (e) {
                     console.log(e.message);
