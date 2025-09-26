@@ -123,6 +123,7 @@
 
         let codeArray = new Array(); 
         let lastCode;
+        let delay = null;
 
         async function getWideAngleCamera() {
           const devices = await navigator.mediaDevices.enumerateDevices();
@@ -190,9 +191,7 @@
               outputData.parentElement.hidden = false;
               outputData.innerText = code.data;
 try{
-  if(code.data != lastCode) {
-    lastCode = code.data;
-    console.log(lastCode);
+  if(!delay){
     if(codeArray.indexOf(code.data) == -1){
       codeArray.push(code.data);
       console.log(codeArray);
@@ -201,8 +200,7 @@ try{
     } else {
        audioFail.play();
     }
-  } else {
-     audioFail.play();
+    delay = setTimeout(_ => { delay = null }, 1000);
   }
 } catch (e){
   console.log(e.message);
