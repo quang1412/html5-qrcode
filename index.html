@@ -142,7 +142,21 @@
           return wideCamera.deviceId;
         }
 
-        let deviceId = await getWideAngleCamera();
+       // let deviceId = await getWideAngleCamera();
+
+        navigator.mediaDevices.enumerateDevices()
+        .then((devices) => {
+          devices.forEach((device) => {
+            console.log(device); // This will be an InputDeviceInfo object if it's an input device
+            if (device.kind === 'audioinput' || device.kind === 'videoinput') {
+              console.log(`Input device found: ${device.label || 'Unnamed Device'} (ID: ${device.deviceId})`);
+            }
+          });
+        })
+        .catch((err) => {
+          console.error(`Error enumerating devices: ${err}`);
+        });
+
         
         async function drawLine(begin, end, color) {
           canvas.beginPath();
