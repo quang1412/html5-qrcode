@@ -165,16 +165,21 @@
               outputMessage.hidden = true;
               outputData.parentElement.hidden = false;
               outputData.innerText = code.data;
-
-              if(code.data != lastCode) return;
-              lastCode = code.data;
-              
-              if(codeArray.indexOf(code.data) == -1){
-                codeArray.push(code.data);
-                 audioTrue.play();
-              } else {
-                 audioFail.play();
-              }
+try{
+  if(code.data == lastCode) return;
+  
+  lastCode = code.data;
+  
+  if(codeArray.indexOf(code.data) == -1){
+    codeArray.push(code.data);
+     audioTrue.play();
+  } else {
+     audioFail.play();
+  }
+} catch (e){
+  console.log(e.message);
+  alert(e.message);
+}
               
             } else {
               outputMessage.hidden = false;
