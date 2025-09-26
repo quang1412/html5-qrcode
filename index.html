@@ -123,10 +123,11 @@
 
         let codeArray = new Array(); 
         let lastCode;
-        let delay = null;
-
+        let delay = null;  
+        let devices;  
+        
         async function getWideAngleCamera() {
-          const devices = await navigator.mediaDevices.enumerateDevices();
+          devices = await navigator.mediaDevices.enumerateDevices();
           console.log(devices);
           const backCameras = devices.filter(device => device.kind === "videoinput" && device.label.toLowerCase().includes("back"));
         
@@ -192,6 +193,8 @@
               outputData.innerText = code.data;
 try{
   if(!delay){
+    console.log(devices);
+    
     if(codeArray.indexOf(code.data) == -1){
       codeArray.push(code.data);
       console.log(codeArray);
