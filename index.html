@@ -166,11 +166,12 @@
               outputData.parentElement.hidden = false;
               outputData.innerText = code.data;
 try{
-  
   if(code.data != lastCode) {
     lastCode = code.data;
+    console.log(lastCode);
     if(codeArray.indexOf(code.data) == -1){
       codeArray.push(code.data);
+      console.log(codeArray);
        audioTrue.play();
     } else {
        audioFail.play();
